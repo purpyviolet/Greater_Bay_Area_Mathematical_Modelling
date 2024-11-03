@@ -9,7 +9,6 @@ plt.rcParams['font.sans-serif'] = ['SimHei']  # 使用SimHei字体
 plt.rcParams['axes.unicode_minus'] = False  # 正确显示负号
 # 1. 数据准备
 data = pd.read_excel('问题一数据集.xlsx')
-#比赛结束前最后两天售后群发布无水印可视化结果+无标注代码【可直接提交】为了防止倒卖， 论文写作过程中遗留数个致命问题，无关代码，该问题解决方式仅在官网授权售后群答疑，盗卖方式购买资料不提供答疑，感谢理解 资料助攻购买链接+说明https://docs.qq.com/doc/p/af5a4d649b35e471f36258892c690cb48d202001
 # 提取 GDP 和相关指标
 gdp = data['粤港澳大湾区GDP (万亿元人民币)']
 population_data = data[['粤港澳大湾区人口 (百万)',
@@ -23,7 +22,7 @@ logistics_data = data[['粤港澳大湾区物流总量 (亿吨)',
 international_data = data[['全球GDP总量 (万亿美元)',
                             '全球贸易总额 (万亿美元)',
                             '全球出口总额 (万亿美元)',
-                            '全球进口总额 (万亿美元)',#比赛结束前最后两天售后群发布无水印可视化结果+无标注代码【可直接提交】为了防止倒卖， 论文写作过程中遗留数个致命问题，无关代码，该问题解决方式仅在官网授权售后群答疑，盗卖方式购买资料不提供答疑，感谢理解 资料助攻购买链接+说明https://docs.qq.com/doc/p/af5a4d649b35e471f36258892c690cb48d202001
+                            '全球进口总额 (万亿美元)',
                             '全球贸易增长率 (%)']]
 
 education_data = data[['粤港澳大湾区高中及以下教育人口',
@@ -66,7 +65,7 @@ international_reduced = pca.transform(international_data)[:, 0]
 # 5. 科技和物流指标相关性分析，选择相关性最大的
 tech_corr = technology_data.corrwith(gdp)
 tech_idx = tech_corr.abs().idxmax()  # 找到与 GDP 相关性最大的指标
-tech_reduced = technology_data[tech_idx]  # 使用列名直接索引
+tech_reduced = technology_data[tech_idx] # 使用列名直接索引
 
 logistics_corr = logistics_data.corrwith(gdp)
 logistics_idx = logistics_corr.abs().idxmax()  # 找到与 GDP 相关性最大的指标
@@ -89,26 +88,28 @@ X = pd.concat([population_data,
                 tech_reduced,
                 logistics_reduced,
                 education_reduced,
-                industry_data], axis=1)
+                industry_reduced], axis=1)
 
-# # 初始化 MinMaxScaler
-# scaler = MinMaxScaler()
+# 初始化 MinMaxScaler
+scaler = MinMaxScaler()
 
-# # 对每个数据集进行标准化
-# standardized_population_data = pd.DataFrame(scaler.fit_transform(population_data), columns=population_data.columns)
-# standardized_international_reduced = pd.Series(scaler.fit_transform(international_reduced.reshape(-1, 1)).flatten(), name='国际环境主成分')
-# standardized_tech_reduced = scaler.fit_transform(tech_reduced.reshape(-1, 1))
-# standardized_logistics_reduced = scaler.fit_transform(logistics_reduced.reshape(-1, 1))
-# standardized_education_reduced = scaler.fit_transform(education_reduced.reshape(-1, 1))
-# standardized_industry_data = scaler.fit_transform(industry_data.reshape(-1, 1))
+# 对每个数据集进行标准化
+standardized_population_data = pd.DataFrame(scaler.fit_transform(population_data), columns=population_data.columns)
+standardized_international_reduced = pd.Series(scaler.fit_transform(international_reduced.reshape(-1, 1)).flatten(), name='国际环境主成分')
+standardized_tech_reduced = pd.Series(scaler.fit_transform(tech_reduced.values.reshape(-1, 1)).flatten(), name='技术指数')
+standardized_logistics_reduced = pd.Series(scaler.fit_transform(logistics_reduced.values.reshape(-1, 1)).flatten(), name='物流指数')
+standardized_education_reduced = pd.Series(scaler.fit_transform(education_reduced.values.reshape(-1, 1)).flatten(), name='教育指数')
+standardized_industry_reduced = pd.Series(scaler.fit_transform(industry_reduced.values.reshape(-1, 1)).flatten(), name='产业指数')
 
-# # 合并标准化后的数据
-# X = pd.concat([standardized_population_data,
-#                standardized_international_reduced,
-#                standardized_tech_reduced,
-#                standardized_logistics_reduced,
-#                standardized_education_reduced,
-#                standardized_industry_data], axis=1)
+
+
+# 6. 准备自变量和因变量
+X = pd.concat([standardized_population_data,
+                pd.Series(international_reduced, name='国际环境主成分'),
+                standardized_tech_reduced,
+                standardized_logistics_reduced,
+                standardized_education_reduced,
+                standardized_industry_reduced], axis=1)
 
 Y = gdp
 
