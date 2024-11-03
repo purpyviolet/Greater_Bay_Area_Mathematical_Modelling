@@ -25,8 +25,15 @@ international_data = data[['全球GDP总量 (万亿美元)', '全球贸易总额
                            '全球出口总额 (万亿美元)', '全球进口总额 (万亿美元)',
                            '全球贸易增长率 (%)']]
 
+education_data = data[['粤港澳大湾区高中及以下教育人口',
+                       '粤港澳大湾区本科及以上教育人口']]
+
+industry_data = data[['粤港澳大湾区第一产业产值 (万亿元人民币)',
+                      '粤港澳大湾区第二产业产值 (万亿元人民币)',
+                      '粤港澳大湾区第三产业产值 (万亿元人民币)']]
+
 # 选择相关因素并构建自变量
-X = pd.concat([population_data, technology_data, logistics_data, international_data], axis=1)
+X = pd.concat([population_data, technology_data, logistics_data, international_data, industry_data], axis=1)
 Y = gdp.values
 
 # 数据标准化
