@@ -27,19 +27,19 @@ plt.rcParams['font.sans-serif'] = ['SimHei']  # 使用SimHei字体
 plt.rcParams['axes.unicode_minus'] = False  # 正确显示负号
 
 # 1. 读取数据
-data = pd.read_excel('问题一数据集.xlsx')
+data = pd.read_excel('纽约数据集.xlsx')
 
 # 2. 提取相关指标
-population_data = data[['粤港澳大湾区人口 (百万)',
-                         '粤港澳大湾区年龄 0-14 岁 (百万)',
-                         '粤港澳大湾区年龄 15-64 岁 (百万)',
-                         '粤港澳大湾区年龄 65 岁及以上 (百万)']].values
+population_data = data[['纽约人口 (百万)',
+                         '纽约年龄 0-14 岁 (百万)',
+                         '纽约年龄 15-64 岁 (百万)',
+                         '纽约年龄 65 岁及以上 (百万)']].values
 
-technology_data = data[['粤港澳大湾区研发经费',
-                         '粤港澳大湾区专利申请数量']].values
+technology_data = data[['纽约研发经费',
+                         '纽约专利申请数量']].values
 
-logistics_data = data[['粤港澳大湾区物流总量 (亿吨)',
-                       '粤港澳大湾区交通运输网络长度 (公里)']].values
+logistics_data = data[['纽约物流总量 (亿吨)',
+                       '纽约交通运输网络长度 (公里)']].values
 
 international_data = data[['全球GDP总量 (万亿美元)',
                             '全球贸易总额 (万亿美元)',
@@ -47,16 +47,16 @@ international_data = data[['全球GDP总量 (万亿美元)',
                             '全球进口总额 (万亿美元)',
                             '全球贸易增长率 (%)']].values
 
-education_data = data[['粤港澳大湾区高中及以下教育人口',
-                       '粤港澳大湾区本科及以上教育人口']].values
+education_data = data[['纽约高中及以下教育人口 (百万)',
+                       '纽约本科及以上教育人口 (百万)']].values
 
-foundation_data = data[['粤港澳大湾区基础设施投资 (万亿元人民币)']].values
+foundation_data = data[['纽约基础设施投资 (万亿美元)']].values
 
-industry_data = data[['粤港澳大湾区第一产业产值 (万亿元人民币)',
-                      '粤港澳大湾区第二产业产值 (万亿元人民币)',
-                      '粤港澳大湾区第三产业产值 (万亿元人民币)']].values
+industry_data = data[['纽约第一产业产值 (万亿美元)',
+                      '纽约第二产业产值 (万亿美元)',
+                      '纽约第三产业产值 (万亿美元)']].values
 
-gdp = data['粤港澳大湾区GDP (万亿元人民币)'].values
+gdp = data['纽约GDP (万亿美元)'].values
 
 # 3. 国际环境指标降维（通过 PCA）
 pca = PCA()
@@ -222,6 +222,8 @@ for name, model in models.items():
     metrics[name] = {'MSE': mse, 'R2': r2}
 
 
+
+
 print(len(X_test), len(Y_test))
 # 假设有5个样本数，因此定义5个年份
 years = [2020, 2021, 2022, 2023, 2024]
@@ -266,8 +268,6 @@ for p in ax.patches:
 plt.show()
 
 
-for name, preds in results.items():
-    print(name,metrics[name])
 
 # 单独输出每个模型的预测结果和真实值，并绘制图表
 for name, preds in results.items():
