@@ -39,12 +39,18 @@ print(data.describe())
 
 # 3. 相关性分析
 corr_matrix = pd.concat([gdp, population_data, technology_data, logistics_data, international_data, education_data, industry_data], axis=1).corr()
-plt.figure(figsize=(10, 8))
+plt.figure(figsize=(12, 9))
 sns.heatmap(corr_matrix, annot=True, fmt=".2f", cmap='coolwarm', square=True, cbar_kws={"shrink": .8})
-plt.title('相关性热图')
-plt.xlabel('因素')
-plt.ylabel('GDP')
+plt.title('相关性热图',fontsize=20)
+#plt.xlabel('因素',fontsize=18)
+#plt.ylabel('GDP',fontsize=18)
+plt.xticks(rotation=90, fontsize=12)  # 修改横轴标签字体大小和旋转角度
+plt.yticks(rotation=0, fontsize=12)   # 修改纵轴标签字体大小
+# 保存图像
+plt.savefig('Q1/correlation_heatmap.png', dpi=300, bbox_inches='tight')
 plt.show()
+
+
 
 # 4. 主成分分析（针对国际环境）
 pca = PCA()
