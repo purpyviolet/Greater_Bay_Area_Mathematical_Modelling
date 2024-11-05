@@ -125,41 +125,41 @@ R2_ada, MAPE_ada, RMSE_ada = calculate_metrics(Y_test, y_pred_ada)
 R2_gb, MAPE_gb, RMSE_gb = calculate_metrics(Y_test, y_pred_gb)
 R2_dt, MAPE_dt, RMSE_dt = calculate_metrics(Y_test, y_pred_dt)
 
-# 将每个模型的指标存入字典
-metrics = {
-    'Linear Regression': {'MAPE': MAPE_linear, 'RMSE': RMSE_linear},
-    'Random Forest': {'MAPE': MAPE_rf, 'RMSE': RMSE_rf},
-    'BP Neural Network': {'MAPE': MAPE_nn, 'RMSE': RMSE_nn},
-    'Ridge Regression': {'MAPE': MAPE_ridge, 'RMSE': RMSE_ridge},
-    'Lasso Regression': {'MAPE': MAPE_lasso, 'RMSE': RMSE_lasso},
-    'XGBoost': {'MAPE': MAPE_xgb, 'RMSE': RMSE_xgb},
-    'CatBoost': {'MAPE': MAPE_catboost, 'RMSE': RMSE_catboost},
-    'AdaBoost': {'MAPE': MAPE_ada, 'RMSE': RMSE_ada},
-    'Gradient Boosting': {'MAPE': MAPE_gb, 'RMSE': RMSE_gb},
-    'Decision Tree': {'MAPE': MAPE_dt, 'RMSE': RMSE_dt}
-}
+# # 将每个模型的指标存入字典
+# metrics = {
+#     'Linear Regression': {'MAPE': MAPE_linear, 'RMSE': RMSE_linear},
+#     'Random Forest': {'MAPE': MAPE_rf, 'RMSE': RMSE_rf},
+#     'BP Neural Network': {'MAPE': MAPE_nn, 'RMSE': RMSE_nn},
+#     'Ridge Regression': {'MAPE': MAPE_ridge, 'RMSE': RMSE_ridge},
+#     'Lasso Regression': {'MAPE': MAPE_lasso, 'RMSE': RMSE_lasso},
+#     'XGBoost': {'MAPE': MAPE_xgb, 'RMSE': RMSE_xgb},
+#     'CatBoost': {'MAPE': MAPE_catboost, 'RMSE': RMSE_catboost},
+#     'AdaBoost': {'MAPE': MAPE_ada, 'RMSE': RMSE_ada},
+#     'Gradient Boosting': {'MAPE': MAPE_gb, 'RMSE': RMSE_gb},
+#     'Decision Tree': {'MAPE': MAPE_dt, 'RMSE': RMSE_dt}
+# }
 
-# 找到MAPE和RMSE的最大值，归一化
-max_mape = max([metrics[model]['MAPE'] for model in metrics])
-max_rmse = max([metrics[model]['RMSE'] for model in metrics])
+# # 找到MAPE和RMSE的最大值，归一化
+# max_mape = max([metrics[model]['MAPE'] for model in metrics])
+# max_rmse = max([metrics[model]['RMSE'] for model in metrics])
 
-# 计算每个模型的加权综合误差
-weights = {'MAPE': 0.5, 'RMSE': 0.5}  # 可以调整权重
-combined_error = {
-    model: (metrics[model]['MAPE'] / max_mape) * weights['MAPE'] +
-           (metrics[model]['RMSE'] / max_rmse) * weights['RMSE']
-    for model in metrics
-}
+# # 计算每个模型的加权综合误差
+# weights = {'MAPE': 0.5, 'RMSE': 0.5}  # 可以调整权重
+# combined_error = {
+#     model: (metrics[model]['MAPE'] / max_mape) * weights['MAPE'] +
+#            (metrics[model]['RMSE'] / max_rmse) * weights['RMSE']
+#     for model in metrics
+# }
 
-# 按综合误差排序
-sorted_models = sorted(combined_error.items(), key=lambda x: x[1])
-top_n = 5
-best_models = sorted_models[:top_n]
+# # 按综合误差排序
+# sorted_models = sorted(combined_error.items(), key=lambda x: x[1])
+# top_n = 5
+# best_models = sorted_models[:top_n]
 
-# 输出结果
-print(f"综合MAPE和RMSE最小的前 {top_n} 个模型是:")
-for model, error in best_models:
-    print(f"{model}: 归一化后综合误差 = {error}")
+# # 输出结果
+# print(f"综合MAPE和RMSE最小的前 {top_n} 个模型是:")
+# for model, error in best_models:
+#     print(f"{model}: 归一化后综合误差 = {error}")
 
 
 # 粒子群优化
@@ -168,16 +168,16 @@ bounds = [(0, 1)] * num_weights  # 权重范围
 
 # 定义目标函数
 def objective(weights):
-    weighted_pred = weights[0] * y_pred_lasso + weights[1] * y_pred_gb + weights[2] * y_pred_ridge
+    weighted_pred = weights[0] * y_pred_lasso + weights[1] * y_pred_nn + weights[2] * y_pred_ridge
     return mean_squared_error(Y_test, weighted_pred)
 
 # 运行粒子群优化
-result = differential_evolution(objective, bounds, maxiter=100, popsize=50)
+result = differential_evolution(objective, bounds, maxiter=100, popsize=50, seed=42)
 optimal_weights = result.x
 
 # 计算加权预测
 Y_pred_weighted = (optimal_weights[0] * y_pred_lasso +
-                   optimal_weights[1] * y_pred_gb +
+                   optimal_weights[1] * y_pred_nn +
                    optimal_weights[2] * y_pred_ridge)
 
 # 计算加权预测的评价指标
@@ -186,6 +186,8 @@ R2_weighted, MAPE_weighted, RMSE_weighted = calculate_metrics(Y_test, Y_pred_wei
 print(f"加权预测的RMSE: {RMSE_weighted:.4f}")
 # 可视化结果
 labels1 = ['Linear Regression', 'Random Forest', 'BP Neural Network', 'Ridge Regression', 'Lasso Regression', 'XGBoost', 'CatBoost', 'AdaBoost', 'Gradient Boosting', 'Decision Tree','PSO Weighted']
+labels1 = ['线性回归预测', '随机森林预测', 'BP神经网络预测', '岭回归预测', '套索回归预测', 
+          'XGBoost预测', 'CatBoost预测', 'AdaBoost预测', '梯度提升预测', '决策树预测', '粒子群算法加权预测']
 r2_scores = [R2_linear, R2_rf, R2_nn, R2_ridge, R2_lasso, R2_xgb, R2_catboost, R2_ada, R2_gb, R2_dt,R2_weighted]
 mape_scores = [MAPE_linear, MAPE_rf, MAPE_nn, MAPE_ridge, MAPE_lasso, MAPE_xgb, MAPE_catboost, MAPE_ada, MAPE_gb, MAPE_dt, MAPE_weighted]
 rmse_scores = [RMSE_linear, RMSE_rf, RMSE_nn, RMSE_ridge, RMSE_lasso, RMSE_xgb, RMSE_catboost, RMSE_ada, RMSE_gb, RMSE_dt, RMSE_weighted]
@@ -193,7 +195,7 @@ rmse_scores = [RMSE_linear, RMSE_rf, RMSE_nn, RMSE_ridge, RMSE_lasso, RMSE_xgb, 
 
 # 定义标签列表
 labels = ['真实值', '线性回归预测', '随机森林预测', 'BP神经网络预测', '岭回归预测', '套索回归预测', 
-          'XGBoost预测', 'CatBoost预测', 'AdaBoost预测', '梯度提升预测', '决策树预测', 'pso加权迭代预测']
+          'XGBoost预测', 'CatBoost预测', 'AdaBoost预测', '梯度提升预测', '决策树预测', '粒子群算法加权预测']
 
 # 绘制预测模型与真实值的比对
 plt.figure(figsize=(12, 6))
@@ -218,34 +220,141 @@ plt.title('不同模型与真实值的比较')
 # 显示图例
 plt.legend()
 plt.grid()
+plt.savefig('Q2/model_compare.png', dpi=300, bbox_inches='tight')
 plt.show()
 
 
 
 # R^2 Comparison
-plt.figure(figsize=(10, 6))  # 设置宽度为10，高度为6
+plt.figure(figsize=(8, 6))  # 设置宽度为10，高度为6
 plt.bar(labels1, r2_scores, color='b')
-plt.title('R^2 Comparison')
-plt.ylabel('R^2')
+plt.title('粤港澳大湾区各模型 R^2 对比', fontsize=20)
+plt.ylabel('R^2', fontsize=16)
 plt.xticks(rotation=90)  # 使横坐标标签纵向显示
 plt.tight_layout()  # 自动调整子图参数，使图表适合
+plt.savefig('Q2/R2_compare.png', dpi=300, bbox_inches='tight')
 plt.show()
 
 # MAPE Comparison
-plt.figure(figsize=(10, 6))
+plt.figure(figsize=(8, 6))
 plt.bar(labels1, mape_scores, color='g')
-plt.title('MAPE Comparison')
-plt.ylabel('MAPE (%)')
+plt.title('粤港澳大湾区各模型 MAPE 对比', fontsize=20)
+plt.ylabel('MAPE (%)', fontsize=16)
 plt.xticks(rotation=90)
 plt.tight_layout()
+plt.savefig('Q2/MAPE_compare.png', dpi=300, bbox_inches='tight')
 plt.show()
 
 # RMSE Comparison
-plt.figure(figsize=(10, 6))
+plt.figure(figsize=(8, 6))
 plt.bar(labels1, rmse_scores, color='r')
-plt.title('RMSE Comparison')
-plt.ylabel('RMSE')
+plt.title('粤港澳大湾区各模型RMSE对比', fontsize=20)
+plt.ylabel('RMSE', fontsize=16)
 plt.xticks(rotation=90)
 plt.tight_layout()
+plt.savefig('Q2/RMSE_compare.png', dpi=300, bbox_inches='tight')
 plt.show()
+
+
+
+
+# 设置随机种子
+np.random.seed(42)
+
+# 定义生成未来10年数据的函数（无偏置项）
+def generate_future_data(data, years=10, growth_type='linear', random_state=42):
+    np.random.seed(random_state)
+    future_data = []
+    
+    for col in data.columns:
+        last_value = data[col].iloc[-1]
+        growth_rate = (data[col].iloc[-1] - data[col].iloc[0]) / len(data)
+        
+        if growth_type == 'linear':
+            new_values = [last_value + (i * growth_rate) for i in range(1, years + 1)]
+        elif growth_type == 'exponential':
+            base_growth_rate = growth_rate / last_value if last_value != 0 else 0.01
+            new_values = [last_value * (1 + base_growth_rate) ** i for i in range(1, years + 1)]
+        
+        future_data.append(new_values)
+    
+    future_data = np.array(future_data).T
+    future_df = pd.DataFrame(future_data, columns=data.columns)
+    return future_df
+
+# 生成未来10年的人口数据
+future_population_data = generate_future_data(population_data, years=10, growth_type='linear')
+
+# 生成未来10年的技术数据
+future_technology_data = generate_future_data(technology_data, years=10, growth_type='exponential')
+
+# 生成未来10年的物流数据
+future_logistics_data = generate_future_data(logistics_data, years=10, growth_type='linear')
+
+# 生成未来10年的国际数据
+future_international_data = generate_future_data(international_data, years=10, growth_type='linear')
+
+# 生成未来10年的教育数据
+future_education_data = generate_future_data(education_data, years=10, growth_type='linear')
+
+# 生成未来10年的产业数据
+future_industry_data = generate_future_data(industry_data, years=10, growth_type='exponential')
+
+# 合并生成的未来数据
+future_X = pd.concat([future_population_data, future_technology_data, future_logistics_data, 
+                      future_international_data, future_education_data, future_industry_data], axis=1)
+
+# 对生成的未来数据进行标准化
+future_X_scaled = scaler_X.transform(future_X)
+
+# 使用训练好的模型进行预测
+
+future_lasso = lasso_model.predict(future_X_scaled)
+# future_gb = gb_model.predict(future_X_scaled)
+future_ridge = ridge_model.predict(future_X_scaled)
+future_catboost = catboost_model.predict(future_X_scaled)
+future_nn = nn_model.predict(future_X_scaled).flatten()  # 转换为一维数组
+future_rf = rf_model.predict(future_X_scaled)
+future_weighted = (optimal_weights[0] * future_lasso +
+                   optimal_weights[1] * future_nn +
+                   optimal_weights[2] * future_ridge)
+
+
+plt.figure(figsize=(12, 6))
+
+# 假设 gdp 数据从 2000 年开始，每年的索引递增
+start_year = 2000
+years = range(start_year, start_year + len(gdp) + len(future_lasso))
+
+# 将历史 GDP 数据和预测结果拼接起来
+combined_gdp = pd.concat([gdp, pd.Series(future_lasso, index=range(len(gdp), len(gdp) + len(future_lasso)))])
+
+# 绘制历史 GDP 数据
+plt.plot(years[:len(gdp)], gdp, 'o-', label='历史 GDP', linewidth=2, color='blue')
+
+# 绘制每个模型的未来预测曲线
+plt.plot(years[len(gdp):], future_lasso, 'o-', label='套索回归预测GDP', linewidth=2)
+plt.plot(years[len(gdp):], future_ridge, 'd-', label='岭回归预测GDP', linewidth=2)
+plt.plot(years[len(gdp):], future_nn, 'x-', label='神经网络预测GDP', linewidth=2, color='purple')
+plt.plot(years[len(gdp):], future_weighted, 's-', label='粒子群算法加权预测GDP', linewidth=2, color='green')
+
+# 设置图表标题和轴标签
+plt.title('粤港澳大湾区历史GDP与各模型预测未来10年GDP', fontsize=20)
+plt.xlabel('年份', fontsize=16)
+plt.ylabel('GDP (万亿元)', fontsize=16)
+
+# 调整 x 轴标签
+plt.xticks(years[::2], rotation=45)  # 每隔两年显示一次，标签旋转以适应
+
+# 添加图例
+plt.legend()
+
+# 添加网格
+plt.grid()
+
+# 显示图表
+plt.tight_layout()
+plt.savefig('Q2/GreaterAreaBay_future_predict.png', dpi=300, bbox_inches='tight')
+plt.show()
+
 
