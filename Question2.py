@@ -43,7 +43,7 @@ industry_data = data[['粤港澳大湾区第一产业产值 (万亿元人民币)
                       '粤港澳大湾区第三产业产值 (万亿元人民币)']]
 
 # 选择相关因素并构建自变量
-X = pd.concat([population_data, technology_data, logistics_data, international_data, industry_data], axis=1)
+X = pd.concat([population_data, technology_data, logistics_data, international_data, education_data, industry_data], axis=1)
 Y = gdp.values
 
 # 数据标准化
