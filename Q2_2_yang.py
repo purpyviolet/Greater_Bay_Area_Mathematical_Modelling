@@ -409,9 +409,9 @@ print(future_weighted)
 future_gdp_array = future_gdp.values.flatten()
 
 
-future_final_combine=0.5*future_weighted+0.5*future_gdp_array
+future_final_combine=0.8*future_weighted+0.2*future_gdp_array
 
-plt.figure(figsize=(12, 6))
+plt.figure(figsize=(12, 8))
 
 # 假设 gdp 数据从 2000 年开始，每年的索引递增
 start_year = 2000
@@ -426,11 +426,11 @@ combined_gdp = pd.concat([gdp, pd.Series(future_lasso, index=range(len(gdp), len
 plt.plot(years[:len(gdp)], gdp, 'o-', label='历史 GDP', linewidth=2, color='blue')
 
 # 绘制每个模型的未来预测曲线
-plt.plot(years[len(gdp):], future_lasso, 'o-', label='套索回归预测GDP', linewidth=2)
-plt.plot(years[len(gdp):], future_ridge, 'd-', label='岭回归预测GDP', linewidth=2)
-plt.plot(years[len(gdp):], future_nn, 'x-', label='神经网络预测GDP', linewidth=2, color='purple')
+plt.plot(years[len(gdp):], future_lasso, 'o-', label='套索回归预测GDP', linewidth=1)
+plt.plot(years[len(gdp):], future_ridge, 'd-', label='岭回归预测GDP', linewidth=1)
+plt.plot(years[len(gdp):], future_nn, 'x-', label='神经网络预测GDP', linewidth=1, color='purple')
 plt.plot(years[len(gdp):], future_weighted, 's-', label='粒子群算法加权预测GDP', linewidth=2, color='green')
-plt.plot(years[len(gdp):], future_gdp, 's-', label='时间序列预测GDP', linewidth=2, color='orange')
+plt.plot(years[len(gdp):], future_gdp, 's-', label='时间序列预测GDP', linewidth=1, color='orange')
 plt.plot(years[len(gdp):], future_final_combine, 's-', label='时间序列+加权预测预测GDP', linewidth=2, color='red')
 
 # 设置图表标题和轴标签
