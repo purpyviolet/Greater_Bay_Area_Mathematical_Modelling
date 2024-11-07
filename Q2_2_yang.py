@@ -362,7 +362,7 @@ def generate_future_data(data, years=10, growth_type='linear', model_type='linea
 
 
 # 生成未来10年的人口数据
-future_population_data = generate_future_data(population_data, years=10, growth_type="xgboost")
+future_population_data = generate_future_data(population_data, years=10, growth_type="linear")
 
 # 生成未来10年的技术数据
 future_technology_data = generate_future_data(technology_data, years=10, growth_type='exponential')
@@ -430,7 +430,7 @@ plt.plot(years[len(gdp):], future_lasso, 'o-', label='套索回归预测GDP', li
 plt.plot(years[len(gdp):], future_ridge, 'd-', label='岭回归预测GDP', linewidth=1)
 plt.plot(years[len(gdp):], future_nn, 'x-', label='神经网络预测GDP', linewidth=1, color='purple')
 plt.plot(years[len(gdp):], future_weighted, 's-', label='粒子群算法加权预测GDP', linewidth=2, color='green')
-plt.plot(years[len(gdp):], future_gdp, 's-', label='时间序列预测GDP', linewidth=1, color='orange')
+plt.plot(years[len(gdp):], future_gdp, 'x-', label='时间序列预测GDP', linewidth=1, color='orange')
 plt.plot(years[len(gdp):], future_final_combine, 's-', label='时间序列+加权预测预测GDP', linewidth=2, color='red')
 
 # 设置图表标题和轴标签

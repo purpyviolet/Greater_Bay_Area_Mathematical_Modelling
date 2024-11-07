@@ -261,7 +261,7 @@ plt.show()
 
 # 设置随机种子
 np.random.seed(42)
-
+from statsmodels.tsa.arima.model import ARIMA
 
 # 定义生成未来10年数据的函数（无偏置项）
 def generate_future_data(data, years=10, growth_type='linear', model_type='linear_regression', random_state=42):
@@ -352,10 +352,10 @@ def generate_future_data(data, years=10, growth_type='linear', model_type='linea
 
 
 # 生成未来10年的人口数据
-future_population_data = generate_future_data(population_data, years=10, growth_type="xgboost")
+future_population_data = generate_future_data(population_data, years=10, growth_type="linear")
 
 # 生成未来10年的技术数据
-future_technology_data = generate_future_data(technology_data, years=10, growth_type='exponential')
+future_technology_data = generate_future_data(technology_data, years=10, growth_type='linear')
 
 # 生成未来10年的物流数据
 future_logistics_data = generate_future_data(logistics_data, years=10, growth_type='linear')
@@ -367,7 +367,7 @@ future_international_data = generate_future_data(international_data, years=10, g
 future_education_data = generate_future_data(education_data, years=10, growth_type='linear')
 
 # 生成未来10年的产业数据
-future_industry_data = generate_future_data(industry_data, years=10, growth_type='exponential')
+future_industry_data = generate_future_data(industry_data, years=10, growth_type='linear')
 
 # 合并生成的未来数据
 future_X = pd.concat([future_population_data, future_technology_data, future_logistics_data,
@@ -399,9 +399,9 @@ print(future_weighted)
 future_gdp_array = future_gdp.values.flatten()
 
 
-future_final_combine=0.5*future_weighted+0.5*future_gdp_array
+future_final_combine=0.8*future_weighted+0.2*future_gdp_array
 
-plt.figure(figsize=(12, 6))
+plt.figure(figsize=(12, 8))
 
 # 假设 gdp 数据从 2000 年开始，每年的索引递增
 start_year = 2000
@@ -416,17 +416,17 @@ combined_gdp = pd.concat([gdp, pd.Series(future_lasso, index=range(len(gdp), len
 plt.plot(years[:len(gdp)], gdp, 'o-', label='历史 GDP', linewidth=2, color='blue')
 
 # 绘制每个模型的未来预测曲线
-plt.plot(years[len(gdp):], future_lasso, 'o-', label='套索回归预测GDP', linewidth=2)
-plt.plot(years[len(gdp):], future_ridge, 'd-', label='岭回归预测GDP', linewidth=2)
-plt.plot(years[len(gdp):], future_nn, 'x-', label='神经网络预测GDP', linewidth=2, color='purple')
+plt.plot(years[len(gdp):], future_lasso, 'o-', label='套索回归预测GDP', linewidth=1)
+plt.plot(years[len(gdp):], future_ridge, 'd-', label='岭回归预测GDP', linewidth=1)
+plt.plot(years[len(gdp):], future_nn, 'x-', label='神经网络预测GDP', linewidth=1, color='purple')
 plt.plot(years[len(gdp):], future_weighted, 's-', label='粒子群算法加权预测GDP', linewidth=2, color='green')
-plt.plot(years[len(gdp):], future_gdp, 's-', label='时间序列预测GDP', linewidth=2, color='orange')
+plt.plot(years[len(gdp):], future_gdp, 'x-', label='时间序列预测GDP', linewidth=1, color='orange')
 plt.plot(years[len(gdp):], future_final_combine, 's-', label='时间序列+加权预测预测GDP', linewidth=2, color='red')
 
 # 设置图表标题和轴标签
 plt.title('纽约历史GDP与各模型预测未来10年GDP', fontsize=20)
 plt.xlabel('年份', fontsize=16)
-plt.ylabel('GDP (万亿元)', fontsize=16)
+plt.ylabel('GDP (万亿美元)', fontsize=16)
 
 # 调整 x 轴标签
 plt.xticks(years[::2], rotation=45)  # 每隔两年显示一次，标签旋转以适应
