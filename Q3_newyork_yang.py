@@ -220,8 +220,8 @@ plt.plot(Y_pred_weighted, '^-', label=labels[11], linewidth=2)  # 加权预测
 
 # 添加标题和标签
 plt.xlabel('样本索引', fontsize=16)
-plt.ylabel('GDP (万亿元)', fontsize=16)
-plt.title('不同模型与真实值的比较', fontsize=20)
+plt.ylabel('GDP (万亿美元)', fontsize=16)
+plt.title('纽约不同模型与真实值的比较', fontsize=20)
 
 # 显示图例
 plt.legend()
