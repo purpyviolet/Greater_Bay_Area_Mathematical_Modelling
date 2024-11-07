@@ -134,8 +134,8 @@ print(f'与 GDP 相关的教育指标:\n{education_reduced}')
 # 6.3 产业指标相关性分析
 
 # 计算每个产业的权重（GDP贡献比例）假设三个产业的总价值接近gdp总量
-# weights = industry_data / gdp[:, np.newaxis]
-weights = industry_data / np.sum(industry_data, axis=0)
+weights = industry_data / gdp[:, np.newaxis]
+# weights = industry_data / np.sum(industry_data, axis=0)
 
 # industry_corr = np.corrcoef(industry_data.T, gdp)
 # print(f'产业指标与 GDP 的相关系数:\n{industry_corr[-1, :-1]}')
