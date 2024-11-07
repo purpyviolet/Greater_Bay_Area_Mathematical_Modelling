@@ -204,7 +204,7 @@ labels = ['真实值', '线性回归预测', '随机森林预测', 'BP神经网�
           'XGBoost预测', 'CatBoost预测', 'AdaBoost预测', '梯度提升预测', '决策树预测', '粒子群算法加权预测']
 
 # 绘制预测模型与真实值的比对
-plt.figure(figsize=(12, 6))
+plt.figure(figsize=(12, 8))
 plt.plot(Y_test, 'o-', label=labels[0], linewidth=2)  # 真实值
 plt.plot(y_pred_linear, 's-', label=labels[1], linewidth=2)  # 线性回归预测
 plt.plot(y_pred_rf, 'd-', label=labels[2], linewidth=2)  # 随机森林预测
@@ -219,9 +219,9 @@ plt.plot(y_pred_dt, '4-', label=labels[10], linewidth=2)  # 决策树预测
 plt.plot(Y_pred_weighted, '^-', label=labels[11], linewidth=2)  # 加权预测
 
 # 添加标题和标签
-plt.xlabel('样本索引')
-plt.ylabel('GDP (万亿元)')
-plt.title('不同模型与真实值的比较')
+plt.xlabel('样本索引', fontsize=16)
+plt.ylabel('GDP (万亿元)', fontsize=16)
+plt.title('不同模型与真实值的比较', fontsize=20)
 
 # 显示图例
 plt.legend()
