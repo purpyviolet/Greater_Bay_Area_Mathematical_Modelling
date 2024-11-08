@@ -8,7 +8,7 @@ from sklearn.preprocessing import MinMaxScaler
 plt.rcParams['font.sans-serif'] = ['SimHei']  # 使用SimHei字体
 plt.rcParams['axes.unicode_minus'] = False  # 正确显示负号
 # 1. 数据准备
-data = pd.read_excel('问题一数据集.xlsx')
+data = pd.read_excel('粤港澳数据集.xlsx')
 # 1. 创建列名缩写映射
 rename_columns = {
     '粤港澳大湾区GDP (万亿元人民币)': 'GDP',

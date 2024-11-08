@@ -12,7 +12,7 @@ plt.rcParams['font.sans-serif'] = ['SimHei']  # 使用SimHei字体
 plt.rcParams['axes.unicode_minus'] = False  # 正确显示负号
 
 # 1. 读取数据
-data = pd.read_excel('问题一数据集.xlsx')
+data = pd.read_excel('粤港澳数据集.xlsx')
 
 # 2. 提取相关指标
 population_data = data[['粤港澳大湾区人口 (百万)',
@@ -79,7 +79,7 @@ plt.show()
 # 4. 人口指标使用 t-SNE 降维
 n_samples = population_data.shape[0]
 perplexity_value = min(30, n_samples - 1)  # Set perplexity to be less than n_samples
-tsne = TSNE(perplexity=perplexity_value)
+tsne = TSNE(perplexity=perplexity_value, random_state=42)
 population_tsne = tsne.fit_transform(population_data)
 
 # 5. 科技指标相关性分析
@@ -291,7 +291,7 @@ plt.bar(range(len(model.params[1:])), model.params[1:], color='orange', alpha=0.
 plt.xticks(range(len(model.params[1:])), ['国际环境主成分', '科技指标', '物流指标', '教育指标', '产业指标', '人口t-SNE维度 1', '人口t-SNE维度 2'], rotation=45)
 plt.xlabel('变量', fontsize=16)
 plt.ylabel('回归系数', fontsize=16)
-plt.title('回归系数可视化', fontsize=20, fontweight='bold')
+plt.title('粤港澳大湾区回归系数可视化', fontsize=20, fontweight='bold')
 
 # 去掉网格
 plt.grid(False)
