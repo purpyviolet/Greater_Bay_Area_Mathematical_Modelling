@@ -79,20 +79,8 @@ tech_idx = np.argmax(np.abs(tech_corr[:-1, -1]))  # 找到与 GDP 相关性最�
 tech_reduced = technology_data[:, tech_idx]
 print(f'与 GDP 相关性最大的科技指标:\n{tech_reduced}') 
 
-# scaler = MinMaxScaler()
-# standardized_data = scaler.fit_transform(technology_data)
-
-# # 计算标准化后的几何平均
-# tech_reduced = np.sqrt(standardized_data[:, 0] * standardized_data[:, 1])
-# print(f'与 GDP 相关的科技指标:\n{tech_reduced}') 
 
 # 6. 物流指标相关性分析
-# logistics_corr = np.corrcoef(logistics_data.T, gdp)
-# print(f'物流指标与 GDP 的相关系数:\n{logistics_corr[-1, :-1]}')
-# logistics_idx = np.argmax(np.abs(logistics_corr[:-1, -1]))  # 找到与 GDP 相关性最大的指标
-# logistics_reduced = logistics_data[:, logistics_idx]
-# print(f'与 GDP 相关性最大的物流指标:\n{logistics_reduced}')
-
 # 假设 logistics_data 包含需要的数据
 logistics_volume = logistics_data[:, 0]  # 物流总量
 network_length = logistics_data[:, 1]    # 运输网络长度
@@ -103,12 +91,6 @@ logistics_reduced = logistics_volume * np.log(network_length)
 print(f'与 GDP 相关的物流指标:\n{logistics_reduced}')
 
 # 6.1 教育指标相关性分析
-# education_corr = np.corrcoef(education_data.T, gdp)
-# print(f'教育指标与 GDP 的相关系数:\n{education_corr[-1, :-1]}')
-# education_idx = np.argmax(np.abs(education_corr[:-1, -1]))  # 找到与 GDP 相关性最大的指标
-# education_reduced = education_data[:, education_idx]
-# print(f'与 GDP 相关性最大的教育指标:\n{education_reduced}')
-
 # 定义权重
 w1 = 0.6  # 本科及以上教育人口占比的权重
 w2 = 0.4  # 教育人口总量的权重
@@ -136,12 +118,6 @@ print(f'与 GDP 相关的教育指标:\n{education_reduced}')
 # 计算每个产业的权重（GDP贡献比例）假设三个产业的总价值接近gdp总量
 # weights = industry_data / gdp[:, np.newaxis]
 weights = industry_data / np.sum(industry_data, axis=0)
-
-# industry_corr = np.corrcoef(industry_data.T, gdp)
-# print(f'产业指标与 GDP 的相关系数:\n{industry_corr[-1, :-1]}')
-# industry_idx = np.argmax(np.abs(industry_corr[:-1, -1]))  # 找到与 GDP 相关性最大的指标
-# industry_reduced = industry_data[:, industry_idx]
-# print(f'与 GDP 相关性最大的产业指标:\n{industry_reduced}')
 # 计算CIMVI
 CIMVI = np.sum(weights * industry_data, axis=1)
 industry_reduced = CIMVI
@@ -249,13 +225,6 @@ plt.ylim(-max_residual, max_residual)  # y 轴范围对称于 0
 plt.grid()
 plt.savefig('Q3_1_NY/gdp_residuals.png', dpi=300, bbox_inches='tight')
 plt.show()
-
-# # QQ图
-# plt.subplot(2, 1, 2)
-# sm.qqplot(residuals, line='s', ax=plt.gca())
-# plt.title('残差的 QQ 图')
-# plt.tight_layout()
-# plt.show()
 
 # 15. 相关性热图
 # 计算自变量与因变量的相关性
